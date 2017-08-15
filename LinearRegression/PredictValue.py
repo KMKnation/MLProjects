@@ -102,7 +102,6 @@ print("")
 # m=round(len(Xfeatures)/5)
 print(Xfeatures[0]," ", YLabels[0]," ", alpha," ", iteration )
 
-
 Theta=linearRegression(Xfeatures, YLabels, alpha, iteration)
 
 print(Theta)
