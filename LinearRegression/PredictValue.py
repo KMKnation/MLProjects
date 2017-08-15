@@ -1,4 +1,6 @@
 import numpy as num
+import sys
+
 '''
 h(x) = theta0 + theta1x;
 also for multiple features
@@ -81,7 +83,7 @@ GET DATA FROM CSV FILE OR TXT FILE TO PERFORM LINEAR REGRETION
 Xfeatures = []
 YLabels = []
 alpha = 0.000001
-iteration = 100000
+iteration = 6000
 f1 = open("LinearRegression.txt")
 z = f1.readline()
 print("Fetching data ...")
@@ -105,3 +107,20 @@ print(Xfeatures[0]," ", YLabels[0]," ", alpha," ", iteration )
 Theta=linearRegression(Xfeatures, YLabels, alpha, iteration)
 
 print(Theta)
+
+print("\n========================================================================================")
+
+print("Saving Model......")
+f2 = open("Models.txt", "w")
+f2.write(str(Theta)+"\n")
+f2.close()
+
+print("\n========================================================================================")
+while True:
+    print("Enter ",len(Xfeatures[0])," features to predict value for")
+    Pred=[1];
+    sys.stdout.flush()
+    for i in range(len(Xfeatures[0])-1):
+        temp=float(input("Enter feature number "))
+        Pred.append(temp)
+    print(Hypothe(Theta,Pred))
