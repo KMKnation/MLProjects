@@ -96,4 +96,8 @@ while z:
     z = f1.readline()
 f1.flush()
 print("")
-print(Xfeatures)
+iteration = int(input("Enter number of iterations\n"))
+alpha=float(input("Enter the learning rate"))
+
+# m=round(len(Xfeatures)/5)
+print(Xfeatures[0]," ", YLabels[0]," ", alpha," ", iteration )
