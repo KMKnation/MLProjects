@@ -37,13 +37,13 @@ and for theta GradDecent
 '''
 def gradientTerm(X, y, Theta, position):
     sum = 0
-    for i in range(X):
+    for i in range(len(X)):
         sum = (Hypothe(Theta, X[i]) - y[i]) - X[i][position]
     return sum
 
 def gradientDecent(X, y, Theta, alpha):
     ThetaList = []
-    for i in range(X):
+    for i in range(0,len(Theta)):
         ThetaList.append((Theta[i] - (alpha * gradientTerm(X, y, Theta, i))))
     return ThetaList
 
@@ -56,21 +56,21 @@ TO perform linear regrssion,
 Make sure to keep alpha as small as possible in the order of 0.000001 or less and the number of iterations to be around 100,000-1,000,000 for better results.
 '''
 
-def linearRegression(Xfeatures, yLabels, alpha, iteration):
-    if(len(X) != len(Y)):
+def linearRegression(Xfeatures, Ylabels, alpha, iteration):
+    if(len(Xfeatures) != len(YLabels)):
         print("Data Missing")
     else:
         #initializing X[0] = 1 for all features
-        for i in  range(Xfeatures):
+        for i in range(len(Xfeatures)):
             Xfeatures[i].insert(0,1)
         #initialiizing theta make sure theta size equals to X Fetaures
-        Theta = [0][len(Xfeatures)]
+        Theta = [0]*len(Xfeatures[0])
 
         for i in range(iteration):
             print("\n Iteration number")
             print("Theta value before", Theta)
-            Theta = gradientDecent(Xfeatures, yLabels, Theta, alpha)
-        print("Theta After GD",Theta)
+            Theta = gradientDecent(Xfeatures, Ylabels, Theta, alpha)
+        print("\nTheta After GD\n",Theta)
         return Theta
 
 
@@ -80,8 +80,8 @@ GET DATA FROM CSV FILE OR TXT FILE TO PERFORM LINEAR REGRETION
 '''
 Xfeatures = []
 YLabels = []
-alpha = 0
-iteration = 10000
+alpha = 0.000001
+iteration = 100000
 f1 = open("LinearRegression.txt")
 z = f1.readline()
 print("Fetching data ...")
@@ -96,8 +96,13 @@ while z:
     z = f1.readline()
 f1.flush()
 print("")
-iteration = int(input("Enter number of iterations\n"))
-alpha=float(input("Enter the learning rate"))
+# iteration = int(input("Enter number of iterations\n"))
+# alpha=float(input("Enter the learning rate"))
 
 # m=round(len(Xfeatures)/5)
 print(Xfeatures[0]," ", YLabels[0]," ", alpha," ", iteration )
+
+
+Theta=linearRegression(Xfeatures, YLabels, alpha, iteration)
+
+print(Theta)
