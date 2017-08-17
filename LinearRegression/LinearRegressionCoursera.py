@@ -31,16 +31,17 @@ Cost FUcntion
 def RegCostFunction(theta, x, y):
     m = len(y)
     J = 0
-    for i in range(len(x)):
+    for i in range(x):
         J += ((Hypothe(theta, x[i]) - y[i])**2)
-    return J / (2 * len(x))
+    J = J/2*m
+    return J
 
 '''
 Gradient Decent Algo
 for all values of θ­ simultaneously update,
  θj= θj - α * (Ə J(θ)/ Əθj)
 }
-J = (H(x) - yi)) *Xi
+
 for J(theta)
 I have defined GradeTerm her
 and for theta GradDecent
@@ -48,13 +49,13 @@ and for theta GradDecent
 def gradientTerm(X, y, Theta, position):
     sum = 0
     for i in range(len(X)):
-        sum += (Hypothe(Theta, X[i]) - y[i]) * X[i][position]
+        sum = (Hypothe(Theta, X[i]) - y[i]) - X[i][position]
     return sum
 
 def gradientDecent(X, y, Theta, alpha):
     ThetaList = []
     for i in range(0,len(Theta)):
-        ThetaList.append(Theta[i] - (alpha * gradientTerm(X, y, Theta, i) / len(X)))
+        ThetaList.append((Theta[i] - (alpha * gradientTerm(X, y, Theta, i))))
     return ThetaList
 
 '''
@@ -77,11 +78,12 @@ def linearRegression(Xfeatures, Ylabels, alpha, iteration):
         Theta = [0]*len(Xfeatures[0])
 
         for i in range(iteration):
+            print("\n Iteration number")
             print("Theta value before", Theta)
             Theta = gradientDecent(Xfeatures, Ylabels, Theta, alpha)
-            print("\nTheta After GD\n", Theta)
-
+        print("\nTheta After GD\n",Theta)
         return Theta
+
 
 
 '''
@@ -91,7 +93,6 @@ Xfeatures = []
 YLabels = []
 alpha = 0.01
 iteration = 1500
-# time_in_min,distance_in_km,cost_without_service_tax
 f1 = open("ex1data1.txt")
 z = f1.readline()
 print("Fetching data ...")
@@ -108,22 +109,19 @@ f1.flush()
 print("")
 # iteration = int(input("Enter number of iterations\n"))
 # alpha=float(input("Enter the learning rate"))
-platData(Xfeatures, YLabels, "Area in 10000", "Profit in $10000",5)
-Theta=linearRegression(Xfeatures, YLabels, alpha, iteration)
-print("\n========================================================================================")
 
-print("Saving Model......")
-f2 = open("Models.txt", "w")
-f2.write(str(Theta)+"\n")
-f2.close()
+# print(Xfeatures[0]," ", YLabels[0]," ", alpha," ", iteration )
+Theta=linearRegression(Xfeatures, YLabels, alpha, iteration)
+
+print(Theta)
 
 print("\n========================================================================================")
 while True:
-    print("Enter ",len(Xfeatures[0]) - 1," features to predict value for")
-    Pred=[1];
+    print("Enter ",len(Xfeatures[0])," features to predict value for")
+    Pred=[1]
     sys.stdout.flush()
     for i in range(len(Xfeatures[0])-1):
         temp=float(input("Enter feature number "))
         Pred.append(temp)
     print(Hypothe(Theta,Pred))
-    print("Prediction amount is ", Hypothe(Theta, Pred) * 10000)
+
