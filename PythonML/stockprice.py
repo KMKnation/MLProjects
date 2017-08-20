@@ -5,6 +5,7 @@ from sklearn.linear_model import LinearRegression
 import numpy as nm
 import matplotlib.pyplot as plt
 from matplotlib import style
+import pickle
 
 style.use('ggplot')
 
@@ -20,7 +21,7 @@ forcast_col = 'Adj. Close'
 df.fillna(-99999, inplace=True)
 
 
-forecast_out = int(math.ceil(0.01*len(df)))
+forecast_out = int(math.ceil(0.03*len(df)))
 print(forecast_out)
 df['label'] = df[forcast_col].shift(-forecast_out)
 # df.dropna(inplace=True)
@@ -41,11 +42,19 @@ y = nm.array(df['label'])
 
 X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.2)
 
-# -1 to chho processor -1 will use minimum processors
-clf = LinearRegression(n_jobs=-1)
+# # -1 to chho processor -1 will use minimum processors
+# clf = LinearRegression(n_jobs=-1)
+#
+# # to fit our training set
+# clf.fit(X_train, y_train)
 
-# to fit our training set
-clf.fit(X_train, y_train)
+# # storing classifier into pickle for infuture use without training data
+# with open('stockpriceclassifier.pickel', 'wb') as f:
+#     pickle.dump(clf, f)
+
+# reading classifier from pickle
+pckel_in = open('stockpriceclassifier.pickel', 'rb')
+clf = pickle.load(pckel_in)
 
 # to see out model's accuracy on testing data
 accuracy = clf.score(X_test, y_test)
