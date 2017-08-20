@@ -6,9 +6,9 @@ import matplotlib.pyplot as plt
 to visualize data
 '''
 def platData(Xfeatures, Ylabels, Xtag, Ytag, markerSize):
-    plt.plot(Xfeatures, YLabels, 'rx', 2, 10)
-    plt.ylabel('Profit in $10,000s')
-    plt.xlabel('Population of City in 10,000s')
+    plt.plot(Xfeatures, Ylabels, 'rx', 2, markerSize)
+    plt.ylabel(Xtag)
+    plt.xlabel(Ytag)
     plt.show()
 
 '''
@@ -17,7 +17,7 @@ also for multiple features
 '''
 def Hypothe(theta, xi):
     if(len(theta) == len(xi)):
-        sum = 0
+        sum     = 0
         for i in range(len(xi)):
             sum += theta[i] * xi[i]
         return sum
@@ -90,9 +90,9 @@ GET DATA FROM CSV FILE OR TXT FILE TO PERFORM LINEAR REGRETION
 Xfeatures = []
 YLabels = []
 alpha = 0.01
-iteration = 1500
+iteration = 400
 # time_in_min,distance_in_km,cost_without_service_tax
-f1 = open("ex1data1.txt")
+f1 = open("ex1data2.txt")
 z = f1.readline()
 print("Fetching data ...")
 while z:
@@ -109,7 +109,9 @@ print("")
 # iteration = int(input("Enter number of iterations\n"))
 # alpha=float(input("Enter the learning rate"))
 platData(Xfeatures, YLabels, "Area in 10000", "Profit in $10000",5)
+
 Theta=linearRegression(Xfeatures, YLabels, alpha, iteration)
+
 print("\n========================================================================================")
 
 print("Saving Model......")
