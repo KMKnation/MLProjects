@@ -25,6 +25,10 @@ for resized in pyramid(image, scale=1.5):
         # THIS IS WHERE YOU WOULD PROCESS YOUR WINDOW, SUCH AS APPLYING A
         # MACHINE LEARNING CLASSIFIER TO CLASSIFY THE CONTENTS OF THE
         # WINDOW
+        try:
+            input("Press enter to continue")
+        except SyntaxError:
+            pass
 
         # since we do not have a classifier, we'll just draw the window
         clone = resized.copy()
