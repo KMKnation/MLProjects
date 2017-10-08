@@ -55,7 +55,7 @@ cnt = a_contours[0]
 x,y,w,h = cv2.boundingRect(cnt)
 crop = image[y:y+h,x:x+w]
 
-cv2.imshow('sofwinres',crop)
+cv2.imshow('cropped',crop)
 if cv2.waitKey(0) & 0xff == 27:
     cv2.destroyAllWindows()
 
@@ -101,7 +101,7 @@ dst = cv2.dilate(dst,None)
 #----Threshold for an optimal value, it may vary depending on the image---
 image[dst>0.01*dst.max()]=[0,0,255]
 
-cv2.imshow('dst',image)
+cv2.imshow('dst corner haris',image)
 if cv2.waitKey(0) & 0xff == 27:
     cv2.destroyAllWindows()
 
