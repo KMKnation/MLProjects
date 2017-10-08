@@ -9,7 +9,7 @@ import numpy as np
 import pickle
 
 # Read the input image
-image = cv2.imread("bill1.jpg")
+image = cv2.imread("example.jpg")
 
 
 # pre-process the image by resizing it, converting it to
@@ -28,7 +28,7 @@ edged = cv2.Canny(blurred, 50, 200, 255)
 ret, thresholdImage = cv2.threshold(gray, 90, 255, cv2.THRESH_BINARY_INV)
 
 
-# Find contou   rs in the image
+# Find contours in the image
 _, contours, hier = cv2.findContours(thresholdImage.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 contours= sorted(contours, key = cv2.contourArea, reverse = True)[:1]
 
@@ -51,6 +51,44 @@ thresh = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
 thresh = cv2.morphologyEx(thresh, cv2.MORPH_GRADIENT, kernel)
 
 
+cv2.imshow('thresh',thresh)
+if cv2.waitKey(0) & 0xff == 27:
+    cv2.destroyAllWindows()
+
+# Find contours in the image
+t_, t_contours, t_hier = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+t_contours= sorted(t_contours, key = cv2.contourArea, reverse = True)[:1]
+
+displayCnt = None
+
+# loop over the contours
+for c in t_contours:
+    # approximate the contour
+    peri = cv2.arcLength(c, True)
+    approx = cv2.approxPolyDP(c, 0.02 * peri, True)
+
+    # if the contour has four vertices, then we have found
+    # the thermostat display
+    print(len(approx))
+    if len(approx) == 4:
+        displayCnt = approx
+        break
+
+
+
+
+# extract the thermostat display, apply a perspective transform
+# to it
+warped = four_point_transform(gray, displayCnt.reshape(4, 2))
+output = four_point_transform(image, displayCnt.reshape(4, 2))
+
+
+cv2.imshow('dst',output)
+if cv2.waitKey(0) & 0xff == 27:
+    cv2.destroyAllWindows()
+'''
+
+#corner harris to find desired corner of image
 dst = cv2.cornerHarris(thresh,2,3,0.04)
 #----result is dilated for marking the corners, not important-------------
 dst = cv2.dilate(dst,None)
@@ -60,3 +98,5 @@ image[dst>0.01*dst.max()]=[0,0,255]
 cv2.imshow('dst',image)
 if cv2.waitKey(0) & 0xff == 27:
     cv2.destroyAllWindows()
+
+'''
