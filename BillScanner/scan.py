@@ -9,7 +9,7 @@ import numpy as np
 import pickle
 
 # Read the input image
-image = cv2.imread("example.jpg")
+image = cv2.imread("bill.jpeg")
 
 
 # pre-process the image by resizing it, converting it to
@@ -50,10 +50,24 @@ kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (4, 4))
 thresh = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
 thresh = cv2.morphologyEx(thresh, cv2.MORPH_GRADIENT, kernel)
 
-
 cv2.imshow('thresh',thresh)
 if cv2.waitKey(0) & 0xff == 27:
     cv2.destroyAllWindows()
+
+
+_a, a_contours,hierarchy = cv2.findContours(thresh,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+cnt = a_contours[1]
+x,y,w,h = cv2.boundingRect(cnt)
+crop = image[y:y+h,x:x+w]
+
+cv2.imshow('sofwinres',crop)
+if cv2.waitKey(0) & 0xff == 27:
+    cv2.destroyAllWindows()
+
+
+
+
+
 
 # Find contours in the image
 t_, t_contours, t_hier = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -79,14 +93,13 @@ for c in t_contours:
 
 # extract the thermostat display, apply a perspective transform
 # to it
-warped = four_point_transform(gray, displayCnt.reshape(4, 2))
-output = four_point_transform(image, displayCnt.reshape(4, 2))
+# warped = four_point_transform(gray, displayCnt.reshape(4, 2))
+# output = four_point_transform(image, displayCnt.reshape(4, 2))
 
 
-cv2.imshow('dst',output)
-if cv2.waitKey(0) & 0xff == 27:
-    cv2.destroyAllWindows()
-'''
+# cv2.imshow('dst',warped)
+# if cv2.waitKey(0) & 0xff == 27:
+#     cv2.destroyAllWindows()
 
 #corner harris to find desired corner of image
 dst = cv2.cornerHarris(thresh,2,3,0.04)
@@ -99,4 +112,3 @@ cv2.imshow('dst',image)
 if cv2.waitKey(0) & 0xff == 27:
     cv2.destroyAllWindows()
 
-'''
