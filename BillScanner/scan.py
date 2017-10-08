@@ -9,13 +9,14 @@ import numpy as np
 import pickle
 
 # Read the input image
-image = cv2.imread("bill.jpeg")
+image = cv2.imread("example.jpg")
 
 
 # pre-process the image by resizing it, converting it to
 # graycale, blurring it, and computing an edge map
 image = imutils.resize(image, height=500)
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+gray = cv2.bilateralFilter(gray, 11, 17, 17)  #new added
 blurred = cv2.GaussianBlur(gray, (5, 5), 0)
 edged = cv2.Canny(blurred, 50, 200, 255)
 
@@ -33,14 +34,6 @@ _, contours, hier = cv2.findContours(thresholdImage.copy(), cv2.RETR_EXTERNAL, c
 contours= sorted(contours, key = cv2.contourArea, reverse = True)[:1]
 
 
-'''
-pts = np.array(eval(args["coords"]), dtype="float32")
-
-# apply the four point tranform to obtain a "birds eye view" of
-# the image
-warped = four_point_transform(image, pts)
-'''
-
 
 # threshold the warped image, then apply a series of morphological
 # operations to cleanup the thresholded image
@@ -55,16 +48,16 @@ if cv2.waitKey(0) & 0xff == 27:
     cv2.destroyAllWindows()
 
 
+# croping image by getting throsold border
 _a, a_contours,hierarchy = cv2.findContours(thresh,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
-cnt = a_contours[1]
+a_contours= sorted(a_contours, key = cv2.contourArea, reverse = True)[:1]  #will sort all inner edges
+cnt = a_contours[0]
 x,y,w,h = cv2.boundingRect(cnt)
 crop = image[y:y+h,x:x+w]
 
 cv2.imshow('sofwinres',crop)
 if cv2.waitKey(0) & 0xff == 27:
     cv2.destroyAllWindows()
-
-
 
 
 
