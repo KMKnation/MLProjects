@@ -16,6 +16,9 @@ from PIL import Image
 import cv2
 
 
+#GET VIDEO FROM CV2
+cap = cv2.VideoCapture(1)
+
 # ## Env setup
 
 
@@ -123,28 +126,35 @@ with detection_graph.as_default():
     detection_scores = detection_graph.get_tensor_by_name('detection_scores:0')
     detection_classes = detection_graph.get_tensor_by_name('detection_classes:0')
     num_detections = detection_graph.get_tensor_by_name('num_detections:0')
-    for image_path in TEST_IMAGE_PATHS:
-      image = Image.open("test_images/Mayur.png")
-      # the array based representation of the image will be used later in order to prepare the
-      # result image with boxes and labels on it.
-      image_np = load_image_into_numpy_array(image)
-      # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
-      image_np_expanded = np.expand_dims(image_np, axis=0)
-      # Actual detection.
-      (boxes, scores, classes, num) = sess.run(
-          [detection_boxes, detection_scores, detection_classes, num_detections],
-          feed_dict={image_tensor: image_np_expanded})
-      # Visualization of the results of a detection.
-      vis_util.visualize_boxes_and_labels_on_image_array(
-          image_np,
-          np.squeeze(boxes),
-          np.squeeze(classes).astype(np.int32),
-          np.squeeze(scores),
-          category_index,
-          use_normalized_coordinates=True,
-          line_thickness=8)
-      print("going to print images")
-      plt.figure(figsize=IMAGE_SIZE)
-      plt.imshow(image_np)
-      plt.show()
 
+    '''
+    to switch between image and video
+    '''
+    # image = Image.open("test_images/Mayur.png")
+    # # the array based representation of the image will be used later in order to prepare the
+    # # result image with boxes and labels on it.
+    # image_np = load_image_into_numpy_array(image)
+    #
+
+    while True:
+        ret, image_np = cap.read()
+        # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
+        image_np_expanded = np.expand_dims(image_np, axis=0)
+        # Actual detection.
+        (boxes, scores, classes, num) = sess.run(
+            [detection_boxes, detection_scores, detection_classes, num_detections],
+            feed_dict={image_tensor: image_np_expanded})
+        # Visualization of the results of a detection.
+        vis_util.visualize_boxes_and_labels_on_image_array(
+            image_np,
+            np.squeeze(boxes),
+            np.squeeze(classes).astype(np.int32),
+            np.squeeze(scores),
+            category_index,
+            use_normalized_coordinates=True,
+            line_thickness=8)
+        print("going to print images")
+        cv2.imshow('object detection', cv2.resize(image_np, (800, 600)))
+        if cv2.waitKey(25) & 0xFF == ord('q'):
+            cv2.destroyAllWindows()
+            break
